@@ -62,6 +62,7 @@ def get_nearest_neighbors(query, model, df, k=5, index=index, word_to_idx=''):
 
 def get_docs(q):
     return get_nearest_neighbors(q, model, df, 5, index, word_to_idx)
+
 if __name__ == "__main__":
     print('Getting docs...')
     docs,urls,distances=get_docs("What is the capital of France?")

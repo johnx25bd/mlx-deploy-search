@@ -1,12 +1,10 @@
-fastapi>=0.68.0,<0.69.0
-uvicorn>=0.15.0,<0.16.0
-pydantic>=1.8.0,<2.0.0
-python-dotenv
-faiss-cpu
-torch
-gensim
-numpy
-pandas
-nltk
-pyarrow
-# Add other dependencies your API needs
+faiss-cpu==1.7.4
+fastapi==0.115.4
+gensim==4.3.3
+nltk==3.9.1
+numpy==1.26.4
+pandas==2.2.3
+pydantic==1.10.18
+torch==2.1.0
+uvicorn==0.15.0
+pyarrow==14.0.1
