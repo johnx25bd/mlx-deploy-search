@@ -4,6 +4,8 @@ import streamlit as st
 
 st.set_page_config(page_title="Simple Search Engine", layout="wide")
 
+API_URL = "http://api:8000"
+
 def truncate_text(text, max_length=50):
     return text[:max_length] + "..." if len(text) > max_length else text
 
@@ -26,7 +28,7 @@ if "search_performed" not in st.session_state:
 
 if search_button and query:
     try:
-        response = requests.post("http://localhost:8000/search", json={"query": query})
+        response = requests.post(f"{API_URL}/search", json={"query": query})
 
         if response.status_code == 200:
             st.session_state.search_performed = True

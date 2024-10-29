@@ -1,5 +1,38 @@
-# FastAPI + Streamlit with Nginx Reverse Proxy
+# Search App, Containerized
 
+## Temporary Note:
+
+This is set up to run, but compose.yml is not yet configured to build the images.
+
+To run via command line:
+```bash
+# Create network
+docker network create search-network
+
+# Build images
+docker build -t mlx-deploy-search-api ./api
+docker build -t mlx-deploy-search-streamlit ./streamlit
+
+# Start API first
+docker run -d --name api --network search-network -p 8000:8000 mlx-deploy-search-api
+
+# Start Streamlit
+docker run -d --name mlx-deploy-search-streamlit --network search-network -p 8501:8501 mlx-deploy-search-streamlit
+```
+
+To stop and clean up:
+```bash
+# Stop containers
+docker stop api mlx-deploy-search-streamlit
+
+# Remove containers
+docker rm api mlx-deploy-search-streamlit
+
+# Remove network
+docker network rm search-network
+```
+
+---
 This repository contains a containerized web application using FastAPI for the backend API, Streamlit for the frontend, and Nginx as a reverse proxy. The application is orchestrated using Docker Compose.
 
 ## Architecture
