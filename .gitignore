@@ -68,3 +68,10 @@ docker-compose.override.yml
 # Logs
 logs/
 *.log
+
+streamlit/data/
+*.faiss
+*.model
+*.csv
+*.pth
+*.parquet
