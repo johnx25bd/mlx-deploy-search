@@ -8,7 +8,7 @@ import gensim.downloader as api
 from preprocess_str import preprocess_list as preprocess
 
 
-def load_word2vec(random_seed=42, embeddings_path='../models/word-vector-embeddings.model', save_path='../models/word-vector-embeddings.model'):
+def load_word2vec(random_seed=42, embeddings_path='../data/word-vector-embeddings.model', save_path='../data/word-vector-embeddings.model'):
     pd.set_option('mode.chained_assignment', None)  # Suppress SettingWithCopyWarning
     np.random.seed(random_seed)
 
