@@ -21,6 +21,9 @@ def display_document(docs, selected_index, doc_type):
 
 st.title("Simple Search Engine")
 
+st.write(f"Attempting to connect to API at: {API_URL}")
+
+
 col1, col2 = st.columns(2)
 
 with col1:
