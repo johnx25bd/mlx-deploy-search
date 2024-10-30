@@ -13,7 +13,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt --verbose
 
 # Download nltk data
-RUN python -m nltk.downloader -d /app/nltk_data stopwords
+RUN python3 -c "import nltk; nltk.download('stopwords')"
 
 RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
