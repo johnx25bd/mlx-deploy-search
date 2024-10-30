@@ -12,9 +12,17 @@ COPY requirements.txt .
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt --verbose
 
-# Download nltk data
-RUN python3 -c "import nltk; nltk.download('stopwords')"
+# Create NLTK data directory and set permissions
+RUN mkdir -p /usr/local/share/nltk_data && \
+    chown -R appuser:appuser /usr/local/share/nltk_data
 
+
+# Download nltk data
+USER appuser
+RUN python3 -m nltk.downloader -d /usr/local/share/nltk_data stopwords
+
+
+USER root
 RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
 # Copy the data files
