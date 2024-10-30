@@ -8,6 +8,10 @@ RUN mkdir -p /var/run/nginx && \
     chown -R nginx:nginx /var/run/nginx && \
     chmod -R 755 /var/run/nginx
 
+RUN mkdir -p /etc/letsencrypt && \
+    chown -R nginx:nginx /etc/letsencrypt && \
+    chmod -R 755 /etc/letsencrypt
+
 COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
 RUN chown -R nginx:nginx /etc/nginx/conf.d/default.conf
 
@@ -19,3 +23,4 @@ CMD ["nginx", "-g", "daemon off; pid /var/run/nginx/nginx.pid;"]
 USER nginx
 
 EXPOSE 8080
+EXPOSE 443

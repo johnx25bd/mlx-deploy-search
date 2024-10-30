@@ -17,10 +17,14 @@ services:
       - api
 
   nginx:
-    build: ./nginx
+    build: 
+      context: ./nginx
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     image: nginx:latest
     ports:
       - "80:8080"
+      - "443:443"
     depends_on:
       - api
       - front
