@@ -1,10 +1,16 @@
+import os
 import requests
 import pandas as pd
 import streamlit as st
 
 st.set_page_config(page_title="Simple Search Engine", layout="wide")
 
-API_URL = "http://api:8000"
+
+# Get API details from environment variables, with defaults
+API_HOST = os.getenv("API_HOST", "api")  # Default to 'api' for Docker
+API_PORT = os.getenv("API_PORT", "8000")
+API_URL = f"http://{API_HOST}:{API_PORT}"
+
 
 def truncate_text(text, max_length=50):
     return text[:max_length] + "..." if len(text) > max_length else text
