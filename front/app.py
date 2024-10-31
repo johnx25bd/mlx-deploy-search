@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import streamlit as st
 
+
 st.set_page_config(page_title="Simple Search Engine", layout="wide")
 
 
@@ -10,7 +11,6 @@ st.set_page_config(page_title="Simple Search Engine", layout="wide")
 API_HOST = os.getenv("API_HOST", "api")  # Default to 'api' for Docker
 API_PORT = os.getenv("API_PORT", "8000")
 API_URL = f"http://{API_HOST}:{API_PORT}"
-
 
 def truncate_text(text, max_length=50):
     return text[:max_length] + "..." if len(text) > max_length else text
@@ -42,7 +42,9 @@ if search_button and query:
 
             # Store the response data in session state
             st.session_state.rel_docs = data["rel_docs"]
+            st.session_state.urls = data["urls"]
             st.session_state.rel_docs_sim = data["rel_docs_sim"]
+            st.session_state.indices = data["indices"]
         else:
             st.error(f"Error: Unable to retrieve documents. Status code: {response.status_code}")
             st.write(f"Response content: {response.text}")
@@ -51,6 +53,8 @@ if search_button and query:
 
 if st.session_state.search_performed:
     df_similar = pd.DataFrame({
+        "Index": st.session_state.indices,
+        "URL": st.session_state.urls,
         "Document": [truncate_text(doc) for doc in st.session_state.rel_docs],
         "Cosine Similarity": st.session_state.rel_docs_sim,  # Using rel_docs_sim instead of distances
     }).reset_index(drop=True)
@@ -62,9 +66,17 @@ if st.session_state.search_performed:
                 "Select a similar document to view full text:",
                 options=list(range(len(df_similar))),
                 format_func=lambda x: df_similar.loc[x, "Document"],
+                on_change=lambda: requests.post(
+                    f"{API_URL}/select", 
+                    json={
+                        "event_type": "select",
+                        "query": query, 
+                        "selected_doc_id": int(df_similar.loc[selected_similar, "Index"])
+                    }
+                ),
                 key="similar_select",
             )
-            st.table(df_similar.style.format({"Cosine Similarity": "{:.4f}"}))
+            st.table(df_similar[["Document", "Cosine Similarity"]].style.format({"Cosine Similarity": "{:.4f}"}))
         else:
             st.write("No similar documents found.")
 

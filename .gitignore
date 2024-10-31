@@ -10,6 +10,7 @@ __pycache__/
 venv/
 env/
 .venv/
+venv-*/
 
 # Distribution / packaging
 .Python
@@ -75,3 +76,5 @@ streamlit/data/
 *.csv
 *.pth
 *.parquet
+
+postgres_data/

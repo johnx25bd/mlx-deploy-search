@@ -49,6 +49,49 @@ def load_word2vec(random_seed=42, embeddings_path='../data/word-vector-embedding
     embeddings = torch.tensor(embeddings_array, dtype=torch.float32)
     return vocab, embeddings, word_to_idx
 
+def log_event(event_type, query, docs):
+    import json
+    import psycopg2
+    from datetime import datetime
+
+    print(f'Logging {event_type} event')
+    try:
+        conn = psycopg2.connect( # TODO: Read in credentials from env
+            dbname="user_logs",
+            user="logger",
+            password="secure_password",
+            host="postgres"
+        )
+
+        user_id = 1
+        ip_address = "127.0.0.1"
+        timestamp = datetime.now()
+        
+        cur = conn.cursor()
+        cur.execute(
+            """
+            INSERT INTO user_activity (
+                user_id,
+                action_type,
+                action_details,
+                ip_address,
+                timestamp,
+                finetuned
+            ) VALUES (
+                %s,%s,%s,%s,%s, %s
+            )
+            """,
+            (user_id, event_type, json.dumps({"query": query, "results": docs}), ip_address, timestamp, False)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        print(f'logged {event_type} activity')
+    except Exception as e:
+        print(f"Failed to log {event_type} activity: {str(e)}")
+
+
+
 
 if __name__ == '__main__':
     vocab, embeddings, word_to_idx = load_word2vec()

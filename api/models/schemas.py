@@ -6,4 +6,11 @@ class QueryRequest(BaseModel):
 
 class DocumentResponse(BaseModel):
     rel_docs: List[str]
+    urls: List[str]
     rel_docs_sim: List[Union[float, int]]
+    indices: List[int]
+
+class SelectRequest(BaseModel):
+    event_type: str
+    query: str
+    selected_doc_id: int

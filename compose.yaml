@@ -2,6 +2,8 @@ services:
   api:
     build: ./api
     image: mlx-deploy-search-api
+    environment:
+      - DATABASE_URL=postgres://logger:secure_password@postgres:5432/user_logs
     ports:
       - "8000:8000"
 
@@ -24,3 +26,25 @@ services:
     depends_on:
       - api
       - front
+  
+  postgres:
+    build: ./postgres
+    volumes:
+      - ./postgres/postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=logger
+      - POSTGRES_PASSWORD=secure_password
+      - POSTGRES_DB=user_logs
+      - POSTGRES_HOST_AUTH_METHOD=trust  # Add this
+      - POSTGRES_INITDB_ARGS=--auth-host=trust 
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "logger", "-d", "user_logs"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
