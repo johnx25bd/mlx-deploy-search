@@ -56,6 +56,8 @@ def log_event(event_type, query, docs):
 
     print(f'Logging {event_type} event')
     try:
+        # Pull this out into a function
+        # And read in credentials from env
         conn = psycopg2.connect( # TODO: Read in credentials from env
             dbname="user_logs",
             user="logger",

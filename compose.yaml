@@ -1,6 +1,8 @@
 services:
   api:
-    build: ./api
+    build:
+      context: .
+      dockerfile: api/Dockerfile
     image: mlx-deploy-search-api
     environment:
       - DATABASE_URL=postgres://logger:secure_password@postgres:5432/user_logs

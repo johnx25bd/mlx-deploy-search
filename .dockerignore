@@ -1,0 +1,28 @@
+# Version control
+.git
+.gitignore
+
+# Python
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/env
+**/venv*
+**/.env
+
+# # Data files
+# **/data
+# **/*.parquet
+# **/*.model
+# **/*.pth
+# **/*.faiss
+
+# IDE
+.vscode
+.idea
+
+# Logs
+**/logs
+**/*.log
