@@ -1,3 +1,5 @@
+_NOTE this readme is not accurate, I copied the api docker container and rebuilt it for finetuning, but ripped out the fastapi functionality_
+
 # Quick FastAPI Boilerplate
 
 This is a basic FastAPI project template, designed to quickly start building APIs with Python. The project is structured with modularity and scalability in mind.
