@@ -1,14 +1,9 @@
-from services.search import train
-import psycopg2
-import json
-from datetime import datetime
-import os
-import sys
 import pandas as pd
-
+from services.search import train, rebuild_index
 
 
 from utils.data import get_conn
+
 
 
 def get_unseen_data():
@@ -42,6 +37,18 @@ def get_unseen_data():
 
     return df
 
+def save(model, index, dir):
+    model.save(dir)
+    index.save(dir)
+    print(f"Returned model, save to {dir}")
+    pass
+
+
+
+def trigger_api_reload():
+    # Trigger API to reload model and index
+    pass
+
 def update_finetuned_status(df):
     conn, cur = get_conn()
     cur.execute("""UPDATE user_activity 
@@ -52,12 +59,15 @@ def update_finetuned_status(df):
     print(f"Updated {len(df)} records")
     conn.close()
 
+
 def finetune():
+
     df = get_unseen_data()
-    if len(df) == 0:
-        return
-    train(df)
-    update_finetuned_status(df)
+    model = train(df)
+    new_index = rebuild_index(model)
+    save(model, new_index)
+    # trigger_api_reload()
+    # update_finetuned_status(df)
 
 
 def reset_finetuned():

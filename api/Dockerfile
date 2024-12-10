@@ -15,12 +15,6 @@ RUN python -m nltk.downloader stopwords
 
 RUN mkdir -p /app/data
 
-# Copy the data files
-COPY api/data/word-vector-embeddings.model /app/data/word-vector-embeddings.model
-COPY api/data/two_tower_state_dict.pth /app/data/two_tower_state_dict.pth
-COPY api/data/doc-index-64.faiss /app/data/doc-index-64.faiss
-COPY api/data/training-with-tokens.parquet /app/data/training-with-tokens.parquet
-
 # Copy the current directory contents into the container at /app
 COPY api /app/
 COPY utils /app/utils

@@ -9,3 +9,4 @@ torch
 uvicorn==0.15.0
 pyarrow==14.0.1
 psycopg2-binary==2.9.10
+tqdm==4.66.4

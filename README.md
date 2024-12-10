@@ -1,51 +1,48 @@
 # Search App, Containerized
 
-## Temporary Note:
+This repository extends [mlx-two-tower-search](https://github.com/johnx25bd/mlx-two-tower-search) to include Docker Compose, user input logging, and finetuning. This is a fully containerized web application designed to demonstrate a robust MLOps and deployment setup. This project leverages FastAPI for the backend, Streamlit for the frontend, and Nginx as a reverse proxy, all orchestrated using Docker Compose.
 
-This is set up to run, but compose.yml is not yet configured to build the images.
+A version of this app is deployed on [simplesearchengine.com](http://simplesearchengine.com), though we don't have SSL configured, so you may need to click through the warning.
 
-To run via command line:
-```bash
-# Create network
-docker network create search-network
+## Quick Start
 
-# Build images
-docker build -t mlx-deploy-search-api ./api
-docker build -t mlx-deploy-search-streamlit ./streamlit
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/johnx25bd/mlx-deploy-search.git
+   cd mlx-deploy-search
+   ```
 
-# Start API first
-docker run -d --name api --network search-network -p 8000:8000 mlx-deploy-search-api
+2. **Build and start the containers:**
+   ```bash
+   docker compose up --build
+   ```
 
-# Start Streamlit
-docker run -d --name mlx-deploy-search-streamlit --network search-network -p 8501:8501 mlx-deploy-search-streamlit
-```
+3. **Access the applications:**
+   - **Frontend (Streamlit):** `http://localhost/`
+   - **API (FastAPI):** `http://localhost/api/`
 
-To stop and clean up:
-```bash
-# Stop containers
-docker stop api mlx-deploy-search-streamlit
+(Note, however, this is an in-development version. The deployed code is hosted on [this repo](https://github.com/kalebsofer/DeploySearch).)
 
-# Remove containers
-docker rm api mlx-deploy-search-streamlit
+## Overview
 
-# Remove network
-docker network rm search-network
-```
-
----
-This repository contains a containerized web application using FastAPI for the backend API, Streamlit for the frontend, and Nginx as a reverse proxy. The application is orchestrated using Docker Compose.
+This application showcases a modern architecture for deploying machine learning models and web applications. It is designed to be easily deployable and scalable, making it an ideal portfolio piece for demonstrating your skills in MLOps and containerization.
 
 ## Architecture
 
-Client Request → Nginx (Port 80) → FastAPI (Port 8000)
-→ Streamlit (Port 8501)
+The application architecture is as follows:
 
+- **Client Request** → **Nginx (Port 80)** → **FastAPI (Port 8000)**
+- **Streamlit (Port 8501)**
 
-- **Nginx**: Reverse proxy that routes requests to the appropriate service
-- **FastAPI**: Backend API service
-- **Streamlit**: Frontend web application
+### Components
+
+- **Nginx**: Acts as a reverse proxy, routing client requests to the appropriate service.
+- **FastAPI**: Serves as the backend API, handling data processing and model inference.
+- **Streamlit**: Provides an interactive frontend for users to interact with the application.
 
 ## Prerequisites
+
+To run this application, ensure you have the following installed:
 
 - Docker and Docker Compose
 - Git
@@ -58,61 +55,44 @@ Client Request → Nginx (Port 80) → FastAPI (Port 8000)
 ├── README.md
 ├── docker-compose.yml
 ├── api/
-│ ├── Dockerfile
-│ ├── app/
-│ │ ├── main.py
-│ │ └── ...
-│ └── requirements.txt
+│   ├── Dockerfile
+│   ├── app/
+│   │   ├── main.py
+│   │   └── ...
+│   └── requirements.txt
 ├── streamlit/
-│ ├── Dockerfile
-│ ├── app.py
-│ └── requirements.txt
+│   ├── Dockerfile
+│   ├── app.py
+│   └── requirements.txt
 └── nginx/
-├── Dockerfile
-└── conf/
-└── nginx.conf
+    ├── Dockerfile
+    └── conf/
+        └── nginx.conf
 ```
-
-## Quick Start
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-name>
-   ```
-
-2. Build and start the containers:
-   ```bash
-   docker-compose up --build
-   ```
-
-3. Access the applications:
-   - Frontend (Streamlit): `http://localhost/`
-   - API (FastAPI): `http://localhost/api/`
 
 ## Development
 
 ### Local Development Setup
 
-1. Set up Python virtual environment:
+1. **Set up Python virtual environment:**
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-2. Install dependencies:
+2. **Install dependencies:**
    ```bash
    cd api && pip install -r requirements.txt
    cd ../streamlit && pip install -r requirements.txt
    ```
 
-3. Run services locally:
-   - FastAPI:
+3. **Run services locally:**
+   - **FastAPI:**
      ```bash
      cd api
      uvicorn app.main:app --reload
      ```
-   - Streamlit:
+   - **Streamlit:**
      ```bash
      cd streamlit
      streamlit run app.py
@@ -120,32 +100,32 @@ Client Request → Nginx (Port 80) → FastAPI (Port 8000)
 
 ### Docker Commands
 
-- Build containers:
+- **Build containers:**
   ```bash
-  docker-compose build
+  docker compose build
   ```
 
-- Start services:
+- **Start services:**
   ```bash
-  docker-compose up
+  docker compose up
   ```
 
-- Stop services:
+- **Stop services:**
   ```bash
-  docker-compose down
+  docker compose down
   ```
 
 ## Deployment
 
-1. Push changes to repository
-2. SSH into your server
-3. Pull latest changes:
+1. **Push changes to repository**
+2. **SSH into your server**
+3. **Pull latest changes:**
    ```bash
    git pull
    ```
-4. Build and start containers:
+4. **Build and start containers:**
    ```bash
-   docker-compose up --build -d
+   docker compose up --build -d
    ```
 
 ## Documentation
@@ -157,35 +137,17 @@ Client Request → Nginx (Port 80) → FastAPI (Port 8000)
 
 ## Known Issues
 
-- Streamlit may have connectivity issues in Brave browser due to privacy settings
-  - Solution: Disable Brave Shields for the site or use a different browser
+- Streamlit may have connectivity issues in Brave browser due to privacy settings.
+  - **Solution:** Disable Brave Shields for the site or use a different browser.
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Fork the repository**
+2. **Create your feature branch (`git checkout -b feature/AmazingFeature`)**
+3. **Commit your changes (`git commit -m 'Add some AmazingFeature'`)**
+4. **Push to the branch (`git push origin feature/AmazingFeature`)**
+5. **Open a Pull Request**
 
-## MIT License
+## License
 
-Copyright (c) 2024 johnx25bd
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: api/Dockerfile
     image: mlx-deploy-search-api
+    volumes:
+      - ./minio:/app/data
     environment:
       - DATABASE_URL=postgres://logger:secure_password@postgres:5432/user_logs
     ports:
@@ -48,5 +50,19 @@ services:
       timeout: 5s
       retries: 5
 
+  finetune:
+    build:
+      context: .
+      dockerfile: finetune/Dockerfile
+    image: mlx-deploy-search-finetune
+    volumes:
+      - ./minio:/app/data:rw
+    environment:
+      - DATABASE_URL=postgres://logger:secure_password@postgres:5432/user_logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+        
+    
 volumes:
   postgres_data:

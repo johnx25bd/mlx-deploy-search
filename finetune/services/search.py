@@ -14,7 +14,7 @@ import torch.optim as optimizer
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.data import load_embeddings
+from utils.embeddings import load_embeddings
 from utils.data import collate
 from utils.text import str_to_tokens
 from models.core import DocumentDataset, TwoTowerModel, loss_fn
@@ -118,11 +118,48 @@ def train(df):
         optim.step()
         if i > 10 == 0:
             print(f"Epoch {i}, Loss: {loss.item()}")
-
-    # Save the model
     print("torch.save(model.state_dict(), two_tower_state_dict_path)")
+    return model, two_tower_state_dict_path
+    # Save the model
 
 
+def rebuild_index(model, docs_df=df_corpus, word_to_idx=word_to_idx):
+    from tqdm import tqdm
+    from utils.core import DocDataset, collate_docdataset
+    
+    print("Rebuilding index...")
+    docs_df = docs_df[['query', 'doc_relevant', 'url_relevant']]
+    doc_dataset = DocDataset(docs_df, word_to_idx)
+    doc_dataloader = DataLoader(doc_dataset, batch_size=32, shuffle=False, collate_fn=collate_docdataset)
+
+
+    model.eval()
+
+    doc_projections = []
+
+    with torch.no_grad():
+        for batch_tokens, batch_mask, batch_indices in tqdm(doc_dataloader):
+
+            doc_encodings = model.doc_encode(batch_tokens, batch_mask)
+            batch_projections = model.doc_project(doc_encodings)
+
+            doc_projections.append(batch_projections)
+    doc_projections = torch.cat(doc_projections, dim=0)
+    doc_projections_np = doc_projections.detach().numpy()
+    faiss.normalize_L2(doc_projections_np)
+    new_index = faiss.IndexFlatL2(doc_projections_np.shape[1])
+    new_index.add(doc_projections_np)
+    return new_index
+    # faiss.write_index(new_index, doc_index_path)
+
+
+
+
+    # Run all documents through model to get encodings matrix
+    # Rebuild index with new encodings matrix
+    # Save new index
+    # Delete older index
+    pass
 
 # Function to get nearest neighbors
 def get_nearest_neighbors(query, model, df, k=5, index=index, word_to_idx=''):

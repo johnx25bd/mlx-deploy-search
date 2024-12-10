@@ -69,13 +69,14 @@ def get_nearest_neighbors(query, model, df, k=5, index=index, word_to_idx=''):
     query_projection = model.query_project(query_encoding)
 
     query_vector = query_projection.detach().numpy()
+    print('faiss.normalize_L2')
     faiss.normalize_L2(query_vector)
+    print('index.search')
     distances, indices = index.search(query_vector, k)
     indices = indices.squeeze()
     distances = distances.squeeze()
     documents = df.loc[indices]['doc_relevant']
     urls = df.loc[indices]['url_relevant']
-    print("get_docs output", documents.to_list(), urls.to_list(), distances.tolist(), indices.tolist())
     return documents.to_list(), urls.to_list(), distances.tolist(), indices.tolist()
 
 def get_docs(q):

@@ -11,7 +11,7 @@ nltk.data.find('corpora/stopwords')
 
 from gensim.utils import simple_preprocess
 
-from utils.data import load_word2vec
+from utils.embeddings import load_word2vec
 
 
 # Initialize stemmer and stopwords
